@@ -1,21 +1,18 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
-
-ARG USERNAME=node
+FROM mcr.microsoft.com/devcontainers/typescript-node:4-24-trixie
+# ARG USERNAME=node
 
 RUN apt-get update && \
     apt-get install -y \
-        build-essential \
-        curl \
-        wget \
-        unzip \
+        sqlite3 \
         jq \
         ripgrep \
         fd-find \
-        sqlite3 \
-        ca-certificates \
+        tree \
+        zip \
+        unzip \
+        less \
         && apt-get clean
-
-USER $USERNAME
+# USER $USERNAME
 
 ENV PNPM_HOME="/home/node/.local/share/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

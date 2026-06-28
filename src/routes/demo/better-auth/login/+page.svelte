@@ -1,33 +1,41 @@
-<script lang='ts'>
-	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+<script lang="ts">
+	import { authStore } from '$lib/auth/store.svelte.ts';
+	import { goto } from '$app/navigation';
 
-	let { form }: { form: ActionData } = $props();
+	let isLoading = $state(false);
+	let error = $state('');
+
+	async function handleGitHubSignIn() {
+		isLoading = true;
+		error = '';
+
+		try {
+			const clientId = 'Ov23li0B4UAT3ELo6jOU'; // From your .env
+			const redirectUri = `${window.location.origin}/auth/github/callback`;
+			const state = Math.random().toString(36).substring(7);
+
+			// Store state for verification
+			sessionStorage.setItem('oauth-state', state);
+
+			// Redirect to GitHub OAuth
+			window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email&state=${state}`;
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to initiate sign-in';
+			isLoading = false;
+		}
+	}
 </script>
 
-<h1>Login</h1>
-<form method="post" action="?/signInEmail" use:enhance>
-	<label>
-		Email
-		<input type="email" name="email" class="mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-	</label>
-	<label>
-		Password
-		<input type="password" name="password" class="mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-	</label>
-	<label>
-		Name (for registration)
-		<input name="name" class="mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-	</label>
-	<button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Login</button>
-	<button formaction="?/signUpEmail" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Register</button>
-</form>
-<p class="text-red-500">{form?.message ?? ''}</p>
+<h1>Sign in</h1>
 
-<hr class="my-4" />
+<button
+	onclick={handleGitHubSignIn}
+	disabled={isLoading}
+	class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+>
+	{isLoading ? 'Signing in...' : 'Sign in with GitHub'}
+</button>
 
-<form method="post" action="?/signInSocial" use:enhance>
-	<input type="hidden" name="provider" value="github" />
-	<input type="hidden" name="callbackURL" value="/demo/better-auth" />
-	<button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Sign in with GitHub</button>
-</form>
+{#if error}
+	<p class="text-red-500 mt-2">{error}</p>
+{/if}
