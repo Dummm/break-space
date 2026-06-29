@@ -5,6 +5,7 @@
 # Container Scanning customization: https://docs.gitlab.com/user/application_security/container_scanning/#customizing-analyzer-behavior
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ci/variables/#cicd-variable-precedence
+
 stages:
   - test
   - secret-detection
@@ -20,11 +21,24 @@ secret_detection:
   stage: secret-detection
 
 pages:
-  image: node:latest
   stage: deploy
+  image: node:24
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+      - node_modules/
+    policy: pull-push
+  before_script:
+    - npm install --global corepack@latest
+    - corepack enable
+    - corepack prepare pnpm@latest --activate
+    - pnpm config set store-dir .pnpm-store
   script:
-    - npm install
-    - npm run build
+    - pnpm install
+    - pnpm run build
   artifacts:
     paths:
       - public
