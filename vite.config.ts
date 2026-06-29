@@ -27,8 +27,14 @@ export default defineConfig({
 			},
 			adapter: adapter({
 				pages: 'public',
-				fallback: '200.html' // may differ from host to host
+				fallback: '404.html' // Ensure this matches
 			}),
+			paths: {
+				// Use the CI environment variable or hardcode your repo name
+				// base: process.env.CI_PAGES_URL ? new URL(process.env.CI_PAGES_URL).pathname : '/break-space',
+				base: '/break-space',
+				relative: false // Ensures absolute paths use the base
+			},
 			preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
 			extensions: ['.svelte', '.svx', '.md'],
 			experimental: { remoteFunctions: true, handleRenderingErrors: true },
