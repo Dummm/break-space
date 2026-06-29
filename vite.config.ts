@@ -26,7 +26,8 @@ export default defineConfig({
 				experimental: { async: true }
 			},
 			adapter: adapter({
-				pages: 'public'
+				pages: 'public',
+				fallback: '200.html' // may differ from host to host
 			}),
 			preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
 			extensions: ['.svelte', '.svx', '.md'],
