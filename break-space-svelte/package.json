@@ -1,0 +1,30 @@
+{
+  "name": "break-space-svelte",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "svelte": "^4.2.0",
+    "lucide-svelte": "^0.400.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^8.0.0",
+    "@storybook/addon-svelte-csf": "^4.0.0",
+    "@storybook/sveltekit": "^8.0.0",
+    "storybook": "^8.0.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0"
+  },
+  "notes": [
+    "This package.json lists the dependencies this translation assumes.",
+    "If you're dropping these files into an existing SvelteKit project,",
+    "merge these into your existing package.json instead of using this",
+    "one verbatim. Versions are recent-as-of-writing pins, not verified",
+    "installs — this environment can't run npm install or Storybook to",
+    "confirm exact compatibility."
+  ]
+}
